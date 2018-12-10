@@ -1,0 +1,72 @@
+{
+  "name": "whld",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "c3": "^0.6.8",
+    "d.js": "^0.7.5",
+    "d3": "^5.7.0",
+    "dot": "^1.1.2",
+    "echarts": "^4.2.0-rc.1",
+    "element-ui": "^2.4.7",
+    "esri-loader": "^2.4.0",
+    "file-saver": "^2.0.0",
+    "jquery": "^3.3.1",
+    "jqueryui": "^1.11.1",
+    "js-cookie": "^2.2.0",
+    "mockjs": "^1.0.1-beta3",
+    "node-sass": "^4.9.3",
+    "normalize.css": "^8.0.0",
+    "nprogress": "^0.2.0",
+    "photo-sphere-viewer": "^3.4.1",
+    "pivottable": "^2.23.0",
+    "plotly.js": "^1.42.5",
+    "sass-loader": "^7.1.0",
+    "screenfull": "^3.3.3",
+    "three": "^0.99.0",
+    "uevent": "^1.0.0",
+    "vue": "^2.5.17",
+    "vue-pano": "^1.4.1",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1",
+    "xlsx": "^0.14.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.0.1",
+    "@vue/cli-plugin-eslint": "^3.0.1",
+    "@vue/cli-service": "^3.0.1",
+    "script-loader": "^0.7.2",
+    "svg-sprite-loader": "^3.9.2",
+    "vue-template-compiler": "^2.5.17"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+}

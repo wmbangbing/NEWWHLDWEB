@@ -1,0 +1,236 @@
+[{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.4109972",
+        "latitude": "30.85825278"
+	},
+    "attributes":{
+    	"imgID":"6"
+    }
+},
+{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.4331917",
+        "latitude": "30.86030278"
+	},
+    "attributes":{
+    	"imgID":"7"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.4553389",
+        "latitude": "30.85876667"
+	},
+    "attributes":{
+    	"imgID":"8"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.5545778",
+        "latitude": "30.83203056"
+	},
+    "attributes":{
+    	"imgID":"10-11"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.5729917",
+        "latitude": "30.81234444"
+	},
+    "attributes":{
+    	"imgID":"12"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.5811833",
+        "latitude": "30.79663889"
+	},
+    "attributes":{
+    	"imgID":"14"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.5757306",
+        "latitude": "30.70835833"
+	},
+    "attributes":{
+    	"imgID":"16"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.5625694",
+        "latitude": "30.63827222"
+	},
+    "attributes":{
+    	"imgID":"17-18"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.5238972",
+        "latitude": "30.535225"
+	},
+    "attributes":{
+    	"imgID":"19"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.5673333",
+        "latitude": "30.46634444"
+	},
+    "attributes":{
+    	"imgID":"20"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.4719389",
+        "latitude": "30.42480278"
+	},
+    "attributes":{
+    	"imgID":"23"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.4125083",
+        "latitude": "30.37860556"
+	},
+    "attributes":{
+    	"imgID":"24-25"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.3806694",
+        "latitude": "30.34755556"
+	},
+    "attributes":{
+    	"imgID":"26"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.3534528",
+        "latitude": "30.32489444"
+	},
+    "attributes":{
+    	"imgID":"27"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.3090833",
+        "latitude": "30.31377222"
+	},
+    "attributes":{
+    	"imgID":"28"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.2411056",
+        "latitude": "30.324425"
+	},
+    "attributes":{
+    	"imgID":"29"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.1587806",
+        "latitude": "30.35963056"
+	},
+    "attributes":{
+    	"imgID":"30"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.1142861",
+        "latitude": "30.39036667"
+	},
+    "attributes":{
+    	"imgID":"32"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.0992222",
+        "latitude": "30.40090833"
+	},
+    "attributes":{
+    	"imgID":"33"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.0758083",
+        "latitude": "30.42481111"
+	},
+    "attributes":{
+    	"imgID":"34"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.0489083",
+        "latitude": "30.47334167"
+	},
+    "attributes":{
+    	"imgID":"35"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.0388",
+        "latitude": "30.52498611"
+	},
+    "attributes":{
+    	"imgID":"36"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.0471944",
+        "latitude": "30.59261944"
+	},
+    "attributes":{
+    	"imgID":"37"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.046550",
+        "latitude": "30.60411667"
+	},
+    "attributes":{
+    	"imgID":"38"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.0406889",
+        "latitude": "30.66099722"
+	},
+    "attributes":{
+    	"imgID":"39"
+    }
+},{
+	"geometry": {
+	 	"type": "point", 
+        "longitude": "114.0373444",
+        "latitude": "30.68188889"
+	},
+    "attributes":{
+    	"imgID":"41"
+    }
+}]

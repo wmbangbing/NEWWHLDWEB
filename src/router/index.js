@@ -36,8 +36,8 @@ export const constantRouterMap = [
         meta: { title: '二维', icon: '2dmap' }
       },
       {
-        // "path": "http://223.255.43.21/treeTest",
-        "path": "http://202.114.148.160/treeTest",
+        // "path": "http://223.255.43.21:82/treeTest",
+        "path": "http://202.114.148.160/qctest/treeTest/",
         // path: 'sceneview',
         // name: 'SceneView',
         // component: () => import('@/views/esriScene/index'),
@@ -45,10 +45,156 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/chart',
+    component: Layout,
+    redirect: '/view/chart',
+    name: 'chart',
+    alwaysShow: true,
+    meta: { title: '统计分析', icon: 'chart' },
+    children: [
+      {
+        path: 'xbArea',
+        name: 'xbArea',
+        component: () => import('@/views/statisticChart/xbArea'),
+        meta: { title: '县区', icon: 'chart_1' }
+      },
+      {
+        path: 'xbAreaByDL',
+        name: 'xbAreaByDL',
+        component: () => import('@/views/statisticChart/xbAreaByDL'),
+        meta: { title: '县区地类', icon: 'chart_1' }
+      },
+      {
+        path: 'yssz',
+        name: 'yssz',
+        component: () => import('@/views/statisticChart/yssz'),
+        meta: { title: '优势树种', icon: 'chart_1' }
+      }
+    ]
+  },
+  // {
+  //   path:"/task",
+  //   component: Layout,
+  //   redirect: '/task/test',   
+  //   name: 'task',
+  //   meta: { title: '任务管理', icon: 'mission' },
+  //   alwaysShow: true,
+  //   children: [
+  //     {
+  //       path: 'test',
+  //       name: 'test',
+  //       component: () => import('@/views/task/test'),
+  //       meta: { title: '测试', icon: '2dmap' }
+  //     },
+  //     {
+  //       path: 'admin',
+  //       name: 'admin',
+  //       component: () => import('@/views/task/admin/index'),
+  //       meta: { title: '任务审查', icon: '2dmap' }
+  //     },
+  //     {
+  //       path: 'districtReview',
+  //       name: 'districtReview',
+  //       component: () => import('@/views/task/district/reviewTask'),
+  //       meta: { title: '任务上传', icon: '2dmap' }
+  //     }
+  //   ]
+  // }
 ]
 
 export default new Router({
   // mode: 'history', // require service support
-  // scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
+
+export const asyncRouterMap = [
+  {
+    path:"/task",
+    component: Layout,
+    redirect: '/view/mapview',   
+    name: 'task',
+    meta: { 
+      title: '任务管理', 
+      icon: 'mission',
+      roles: ['district','admin'] 
+    },
+    alwaysShow: true,
+    children: [
+      // {
+      //   path: 'test',
+      //   name: 'test',
+      //   component: () => import('@/views/task/test'),
+      //   meta: { 
+      //     title: '测试', 
+      //     icon: '2dmap'
+      //   }
+      // },
+      {
+        path: 'admin',
+        name: 'admin',
+        component: () => import('@/views/task/admin/index'),
+        meta: { 
+          title: '任务审查', 
+          icon: 'review' ,
+          roles: ['admin'] 
+        }
+      },
+      {
+        path: 'districtReview',
+        name: 'districtReview',
+        component: () => import('@/views/task/district/reviewTask'),
+        meta: { 
+          title: '上报任务', 
+          icon: 'upload',
+          roles: ['district'] 
+        },
+      },
+      {
+        path: 'districtBase',
+        name: 'districtBase',
+        component: () => import('@/views/task/district/baseTask'),
+        meta: { 
+          title: '非上报任务', 
+          icon: 'upload',
+          roles: ['district'] 
+        },
+      }
+    ]
+  },
+  {
+    path:"/user",
+    component: Layout,
+    redirect: '/view/mapview',   
+    name: 'user',
+    meta: { 
+      title: '用户管理', 
+      icon: 'user',
+      roles: ['district','admin','visitor'] 
+    },
+    alwaysShow: true,
+    children: [
+      {
+        path: 'createUser',
+        name: 'createUser',
+        component: () => import('@/views/user/createUser'),
+        meta: { 
+          title: '创建用户', 
+          icon: 'create' ,
+          roles: ['admin'] 
+        }
+      },
+      {
+        path: 'modifyPassword',
+        name: 'modifyPassword',
+        component: () => import('@/views/user/modifyPassword'),
+        meta: { 
+          title: '修改密码', 
+          icon: 'modifyPsd',
+          roles: ['district','admin','visitor'] 
+        }
+      }
+    ]
+  }
+]

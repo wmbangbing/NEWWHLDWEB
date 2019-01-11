@@ -91,7 +91,8 @@ export default {
       // store.dispatch("EditXBInfo",tempData);
       store.dispatch("EditTableRow",tempData);
       putData(tempData).then(response=>{
-        if(response.status == 204){
+        console.log(response);
+        if(response.status == 200){
           this.$message({
             message:"修改成功",
             type:"success"

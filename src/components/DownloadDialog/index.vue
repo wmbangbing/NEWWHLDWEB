@@ -28,7 +28,8 @@
   
 <script>
   import { replaceKey } from '@/utils/replaceData'
-  import {getHistoryTime,GetXBInfoByTime} from "@/api/histXBInfo"
+  // import {getHistoryTime,GetXBInfoByTime} from "@/api/histXBInfo"
+  import {getHistoryTime,GetXBInfoByTime} from "@/api/xbInfo"
   export default {
     name: '',
     data() {

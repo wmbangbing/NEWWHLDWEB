@@ -1,4 +1,4 @@
-import { loginByUsername, logout, getUserInfo } from '@/api/login1'
+import { loginByUsername, logout, getUserInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -8,6 +8,7 @@ const user = {
     code: '',
     token: getToken(),
     name: '',
+    district:'',
     avatar: '',
     introduction: '',
     roles: [],
@@ -40,7 +41,10 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
-    }
+    },
+    SET_DISTRICT: (state, district) => {
+      state.district = district
+    },
   },
 
   actions: {
@@ -50,10 +54,8 @@ const user = {
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
           const data = response.data
-          commit('SET_TOKEN', data)
-          // commit('SET_TOKEN', data.token)
-          setToken(response.data)
-          // setToken(response.data.token)
+          commit('SET_TOKEN', data.token)
+          setToken(response.data.token)
           resolve()
         }).catch(error => {
           reject(error)
@@ -68,10 +70,10 @@ const user = {
           if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
             reject('error')
           }
-          const data = response.data[0]
+          const data = response.data;
 
-          if (data.Remark && data.Remark.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', data.Remark)
+          if (data.RoleName && data.RoleName.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_ROLES', data.RoleName)
           } else {
             reject('getInfo: roles must be a non-null array !')
           }
@@ -83,6 +85,7 @@ const user = {
           // }
 
           commit('SET_NAME', data.UserName)
+          commit('SET_DISTRICT', data.District)
           // commit('SET_AVATAR', data.avatar)
           commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
           // commit('SET_INTRODUCTION', data.introduction)

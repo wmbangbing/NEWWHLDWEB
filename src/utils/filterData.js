@@ -61,3 +61,55 @@ class data{
     this.村 = CUN;
   }
 }
+
+export function constructTaskData(data){
+  var tableData = [];
+
+  data.map((t)=>{
+    var levelOne = {
+      District:t.District,
+      Principal:t.Principal,
+      ReviewTime:t.ReviewTime,
+      Status:t.Status,
+      SubmissionTime:t.SubmissionTime,
+      TId:t.TId,
+      TaskName:t.TaskName,
+      TaskInfo:[]
+    };
+    t.TaskInfo.map((x)=>{
+      x.TaskInfo_Ghcs_Rel.map((y)=>{
+        var levelTwo = {
+          XBH:x.XBH,
+          Measure:y.Ghcs.Measure,
+          XBMJ:x.XBInfo.XBMJ,
+          ImpArea:y.ImpArea
+        }
+        levelOne.TaskInfo.push(levelTwo);
+      })
+    })
+    tableData.push(levelOne);
+  })
+
+  // for(let i = 0;i < data.TaskInfo.length;i++){
+  //   var s = {
+  //     XBH:data.XBH,
+  //     TaskName:data.TaskInfo[i].Task.TaskName,
+  //     ReviewTime:data.TaskInfo[i].Task.ReviewTime,
+  //     Principal:data.TaskInfo[i].Task.Principal,
+  //     XBMJ:data.XBMJ,
+  //     GHCS:[]
+  //   };
+
+  //   for(let j = 0;j < data.TaskInfo[i].TaskInfo_Ghcs_Rel.length;j++){
+  //     var t = {
+  //       ImpArea:data.TaskInfo[i].TaskInfo_Ghcs_Rel[j].ImpArea,
+  //       Measure:data.TaskInfo[i].TaskInfo_Ghcs_Rel[j].Ghcs.Measure,
+  //       Id:j
+  //     }
+  //     s.GHCS.push(t)
+  //   }           
+    
+  //   tableData.push(s);
+  // }
+  return tableData;
+}

@@ -18,14 +18,19 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.roles.length === 0) {      
         store.dispatch('GetUserInfo').then(res => { // 拉取用户信息
-          const roles = res.data[0].Remark;
-          store.dispatch('setxbLayerDefinition',roles); //根据用户权限设置可见区域
-          store.dispatch("SetXBInfo").then(()=>{
-            
-          });          
+          const district = res.data.District;
+          var roles = [];
+          const role = res.data.RoleName; 
+          roles.push(role);
+          store.dispatch('setxbLayerDefinition',district); //根据用户区设置可见区域
+          store.dispatch("SetXBInfo",district).then(()=>{         
+          }); 
+          store.dispatch('GenerateRoutes', { roles }).then(() => {
+            router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
+            next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+          })         
           next();
-          // store.dispatch('GetTask');
-          
+          // store.dispatch('GetTask');   
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {
             Message.error(err || 'Verification failed, please login again')

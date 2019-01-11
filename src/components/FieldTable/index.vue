@@ -1,5 +1,5 @@
 <template>
-  <div class="FieldTable esri-popup__main-container esri-widget esri-popup--shadow" style="width:1200px;height:550px;display:none">
+  <div v-drag class="FieldTable esri-popup__main-container esri-widget esri-popup--shadow" style="width:1200px;height:550px;display:none">
     <header class="esri-popup__header">
       <h2 class="esri-popup__header-title" tabindex="0">
         属性列表
@@ -210,7 +210,7 @@
               placeholder="Type to search"/>
           </template>
           <template slot-scope="scope">
-            <el-button type="text" size="small"  @click="handleUpdate(scope.row)">编辑</el-button>
+            <el-button v-permission="['admin','district']"  type="text" size="small"  @click="handleUpdate(scope.row)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -232,6 +232,7 @@
 <script>
 import { getFormData } from '@/api/formData'
 import { fadeIn } from '@/utils/style'
+import permission from '@/directive/permission/index.js'
 
 export default {
   data() {
@@ -243,6 +244,7 @@ export default {
       search:""
     }
   },
+  directives: { permission },
   props:[
     "fieldTableParam"
   ],
@@ -272,6 +274,7 @@ export default {
           })
         })
       }
+      console.log(this.tableData);
       return this.tableData
     }
   },

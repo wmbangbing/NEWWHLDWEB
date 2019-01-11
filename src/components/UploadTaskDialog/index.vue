@@ -8,7 +8,7 @@
       class="uploadArea"
       show-file-list
       drag
-      action="http://202.114.148.160/WHLDWebApi/api/UploadExcel"
+      :action=this.UploadTaskParam.url
       accept=".xlsx"
       :on-success="uploadSuccess"
       :on-error="uploadError">
@@ -27,7 +27,8 @@
   export default {
     data() {
       return {
-        visible:this.UploadTaskParam.visible
+        visible:this.UploadTaskParam.visible,
+        url:this.UploadTaskParam.url
       }
     },
     props:['UploadTaskParam'],
@@ -38,8 +39,10 @@
     },
     methods:{
       downloadExcel(){
-        // window.location.href = "http://223.255.43.21/whldwebapi/api/downloadexcel";
-        window.location.href = "http://202.114.148.160/whldwebapi/api/downloadexcel";
+        // action="http://202.114.148.160/WHLDWebApi/api/UploadExcel"
+        window.location.href = "http://223.255.43.21:82/whldwebapi2/api/task/DownloadExcel";
+        // window.location.href = "http://localhost:42501/api/task/DownloadExcel";
+        // window.location.href ='http://202.114.148.160/WHLDWebApi2/api/task/DownloadExcel'
       },
       closeDialog(){
         this.visible = false;

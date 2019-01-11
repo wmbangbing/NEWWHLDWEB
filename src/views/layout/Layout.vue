@@ -53,7 +53,7 @@ export default {
     },
     getApi() {
       axios
-        .get("http://223.255.43.21/webapi/api/values")
+        .get("http://223.255.43.21:82/webapi/api/values")
         .then(function(response) {
           console.log(response);
         })
@@ -75,7 +75,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-// @import url('http://223.255.43.21/arcgis_js_api4.7/library/4.7/esri/css/main.css');
+// @import url('http://223.255.43.21:82/arcgis_js_api4.7/library/4.7/esri/css/main.css');
 // .container {
 //   position: fixed;
 //   height: 100%;

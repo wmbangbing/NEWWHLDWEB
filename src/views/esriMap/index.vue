@@ -1,13 +1,14 @@
 <template>
 <div>
-  <div id="map">
-    <button class="action-button esri-icon-upload" id="openUpload" @click="openUploadTask" title="打开上传面板" style="display:none"></button>
-    <button class="action-button esri-icon-maps" id="renderer"  @click="openRenderer" style="display:none"></button>
-
+  <div ref="map" id="map">
+    <!-- <button class="action-button esri-icon-upload" id="openUpload" @click="openUploadTask" title="打开上传面板" style="display:none"></button> -->
+    <button title="渲染面板" class="action-button esri-icon-maps" id="renderer"  @click="openRenderer" style="display:none"></button>
+    <!-- <button title="测量面积" class="action-button esri-icon-polygon" id="measure" style="display:none"></button> -->
 
     <TaskSelector :taskSelectorParam=taskSelectorParam @returnXBH="getSelectedXBH" id="SelectedXBH"/>
     <ExpandTable :expandTableParam=expandTableParam  id="expandTb"/>
     <FieldTable  :fieldTableParam=fieldTableParam @returnXBH="moveToDK"  @openRowEdit="openRowEdit" @openDownloadDialog=openDownloadDialog id="fieldTb"/>
+    <HistoryTable  :historyTableParam=historyTableParam @returnXBH="moveToDK" id="historyTb"/>
   </div>
   <PivottableDialog :pivottableParam=pivottableParam  />
   <UploadTaskDialog id="UploadTask" :UploadTaskParam=UploadTaskParam  @refreshTaskSel="refreshTaskSel" />
@@ -22,6 +23,7 @@
 <script>
 import esriLoader from "esri-loader";
 import FieldTable from '@/components/FieldTable' 
+import HistoryTable from '@/components/HistoryTable' 
 import ChartDialog from '@/components/ChartDialog' 
 import PivottableDialog from '@/components/PivottableDialog' 
 import TaskSelector from '@/components/TaskSelector' 
@@ -52,6 +54,10 @@ export default  {
       fieldTableParam:{
         visible:false,
         data:null,       
+      },
+      historyTableParam:{
+        visible:false,
+        XBH:null
       },
       taskSelectorParam:{
         visible:false,
@@ -96,7 +102,8 @@ export default  {
     UploadTaskDialog,
     DownloadDialog,
     RendererDialog,
-    PhotoSphereViewerDialog
+    PhotoSphereViewerDialog,
+    HistoryTable
   },
   mounted(){      
     var self = this;
@@ -105,11 +112,12 @@ export default  {
   methods:{
     initMap(self){
       const options = {
-        // url: 'http://223.255.43.21/arcgis_js_api4.8/library/4.8/dojo/dojo.js',
-        url: 'http://202.114.148.160/arcgis_js_api4.8/library/4.8/dojo/dojo.js',
-        // url:'https://js.arcgis.com/4.9/'
+        url: 'http://223.255.43.21:82/arcgis_js_api4.8/library/4.8/dojo/dojo.js',
+        // url: 'http://202.114.148.160/arcgis_js_api4.8/library/4.8/dojo/dojo.js',
+        // url:'https://js.arcgis.com/4.10/'
       };
       createMap(esriLoader,options,panoramicJson,self)
+      // createMap1(esriLoader,options);
     },
     getSelectedXBH(value){
       this.expandTableParam.visible = !this.expandTableParam.visible;
@@ -124,7 +132,11 @@ export default  {
       query.returnGeometry = true;
 
       this.xbLayer.queryFeatures(query).then(reponse =>{
-        this.view.goTo(reponse.features[0].geometry)    
+        var obj = {
+          center:reponse.features[0].geometry.centroid,
+          scale:1000
+        }
+        this.view.goTo(obj)    
       })
     },
     openRowEdit(visible){
@@ -152,9 +164,12 @@ export default  {
 </script>
 
 <style>
-  /* @import url('http://223.255.43.21/arcgis_js_api4.8/library/4.8/esri/css/main.css'); */
-  /* @import url('https://js.arcgis.com/4.9/esri/css/main.css'); */
-  @import url('https://js.arcgis.com/4.9/esri/css/main.css');
+  /* @import url('http://202.114.148.160/arcgis_js_api4.8/library/4.8/esri/css/main.css'); */
+  @import url('http://223.255.43.21:82/arcgis_js_api4.8/library/4.8/esri/css/main.css');
+  
+  /* @import url('http://202.114.148.160/arcgis_js_api4.8/library/4.8/esri/css/main.css'); */
+  /* @import url('https://js.arcgis.com/4.10/esri/css/main.css'); */
+  /* @import url('https://js.arcgis.com/4.10/esri/css/main.css'); */
   #map{
     min-height: calc(100vh - 50px);
     position: relative;

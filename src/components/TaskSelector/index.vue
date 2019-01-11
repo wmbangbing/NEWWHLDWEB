@@ -14,7 +14,9 @@
 
 </template>
 <script>
-import { getFormData } from '@/api/formData'
+// import { getFormData } from '@/api/formData'
+import { getPassTask } from '@/api/task'
+import store from '../../store'
 
 
 export default {
@@ -36,6 +38,7 @@ export default {
     },
     "taskSelectorParam.count":function(curVal,oldVal){
       this.loading =true;
+      
       this.createSelectorData()
       // this.loading =false;    
     }
@@ -43,21 +46,61 @@ export default {
   created(){},
   methods: {
     createSelectorData(){
-      getFormData("task").then(response =>{   
-        console.log(response.data);   
+      getPassTask(store.getters.district).then(response =>{     
         this.options = [];
-        let datas = response.data;       
-        datas.map((data,index)=>{
-          this.options.push({});
-          this.options[index].label = data.Title;
-          this.options[index].value = data.TId;
-          this.options[index].children = [];
-          data.Plans.map((plan,idx)=>{
-            this.options[index].children.push({});
-            this.options[index].children[idx].label = `小班号${plan.XBInfo.XBH}` ;
-            this.options[index].children[idx].value = plan.XBInfo.XBH;       
+        let datas = response.data;
+        // console.log(datas);     
+        // datas.map((data,index)=>{
+        //   this.options.push({});
+        //   this.options[index].label = data.Title;
+        //   this.options[index].value = data.TId;
+        //   this.options[index].children = [];
+        //   data.Plans.map((plan,idx)=>{
+        //     this.options[index].children.push({});
+        //     this.options[index].children[idx].label = `小班号${plan.XBInfo.XBH}` ;
+        //     this.options[index].children[idx].value = plan.XBInfo.XBH;       
+        //   })
+        // })
+        var Model = {
+          label:"",
+          value:"",
+          children:[]
+        }
+
+        for(let i = 0;i<datas.length;i++){    
+          var levelOne = {
+            label:datas[i].TaskName,
+            value:datas[i].TId,
+            children:[]
+          }
+          this.options.push(levelOne);
+          // this.options.push({});
+          // this.options[i].label = datas[i].TaskName;
+          // this.options[i].value = datas[i].TId;
+          // this.options[i].children = [];
+          datas[i].TaskInfo.map((plan,idx)=>{
+            var levelTwo = {
+              label:`小班号${plan.XBH}`,
+              value: plan.XBH,
+              children:[]
+            }
+            this.options[i].children.push(levelTwo);
+
+            // this.options[i].children.push({});
+            // this.options[i].children[idx].label = `小班号${plan.XBH}` ;
+            // this.options[i].children[idx].value = plan.XBH;       
+            // this.options[i].children[idx].children = [];    
+            plan.TaskInfo_Ghcs_Rel.map((Rel,index)=>{
+              var levelThree = {
+                label:Rel.Ghcs.Measure,
+                value: Rel.Ghcs.Measure,
+              }             
+              this.options[i].children[idx].children.push(levelThree);
+              // this.options[i].children[idx].children[index].label = Rel.Ghcs.Measure;
+              // this.options[i].children[idx].children[index].value = Rel.Ghcs.Measure;
+            }) 
           })
-        })
+        }
         this.loading = false;
         // console.log(this.options)      
       })

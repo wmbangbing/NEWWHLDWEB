@@ -5,11 +5,14 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
       "esri/Basemap",
       "esri/Viewpoint",
       "esri/Graphic",
+      "esri/geometry/Polygon",
+      "esri/geometry/geometryEngine",
       'esri/views/MapView',
       "esri/layers/FeatureLayer",
       "esri/layers/WebTileLayer",
       "esri/layers/TileLayer",
       "esri/layers/GraphicsLayer",
+      "esri/layers/MapImageLayer",
       "esri/widgets/Expand",
       "esri/widgets/Home",
       "esri/widgets/LayerList",
@@ -17,6 +20,7 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
       "esri/widgets/Legend",
       "esri/widgets/Compass",
       "esri/widgets/Print",
+      "esri/views/2d/draw/Draw",
       "esri/core/urlUtils",
     ],options)
   .then(
@@ -25,11 +29,14 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
       Basemap,
       Viewpoint,
       Graphic,
+      Polygon,
+      geometryEngine,
       MapView,
       FeatureLayer,
       WebTileLayer,
       TileLayer,
       GraphicsLayer,
+      MapImageLayer,
       Expand,
       Home,
       LayerList,
@@ -37,13 +44,14 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
       Legend,
       Compass,
       Print,
+      Draw,
       urlUtils
     ]) => {
 
-    urlUtils.addProxyRule({
-      urlPrefix: "http://202.114.148.160//arcgis_js_api4.8",
-      proxyUrl: "http://202.114.148.160/DotNet/proxy.ashx"
-    });
+    // urlUtils.addProxyRule({
+    //   urlPrefix: "http://202.114.148.160//arcgis_js_api4.8",
+    //   proxyUrl: "http://202.114.148.160/DotNet/proxy.ashx"
+    // });
 
     //地图底图
     const ESRIvectorBaselayer = new TileLayer({
@@ -119,7 +127,15 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
     const GhcsAct = {
       title: "管护措施",
       id: "GHCS_id",
-      image: require('@/assets//search.png')
+      // image: require('@/assets//search.png')
+      className:"esri-icon-search"
+    }
+
+    const HistAct = {
+      title: "历史小班",
+      id: "Hist_id",
+      // image: require('@/assets//history.png')
+      className:"esri-icon-time-clock"
     }
 
     const popupTemplate = {
@@ -144,13 +160,13 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
           // }
         }]
       }],
-      actions:[GhcsAct]
+      actions:[GhcsAct,HistAct]
     };
 
     //基础图层
     self.xbLayer = new FeatureLayer({
-      url:"http://202.114.148.160:8000/arcgis/rest/services/LinYeMapService/whld_2018/MapServer/0",
-      // url:"http://223.255.43.21:6080/arcgis/rest/services/WHLD_Group/WHLD/MapServer",
+      // url:"http://202.114.148.160:8000/arcgis/rest/services/LinYeMapService/whld_2018/MapServer/0",
+      url:"http://223.255.43.21:6080/arcgis/rest/services/WHLD_Group/WHLD/MapServer",
       outFields:["*"],
       visible: true,
       title:"小班图层",
@@ -170,6 +186,17 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
       }
     }) 
 
+    // const droneBaseMap = new MapImageLayer({
+    //   url:"http://202.114.148.160:8000/arcgis/rest/services/LinYeMapService/WHLDIMGNC/MapServer",
+    //   // sublayers: [{
+    //   //   id: 0
+    //   // }]
+    // })
+
+    const testlayer = new TileLayer({
+      url:"http://202.114.148.160:8000/arcgis/rest/services/LinYeMapService/WHLDIMG/MapServer"
+    })
+
     //360图层
     var gralayer = new GraphicsLayer({
       title:"360全景点"
@@ -184,10 +211,10 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
     };
 
     for(let i=0;i<panoramicJson.length;i++){
-      gralayer.add(createGraphic(panoramicJson[i]));
+      gralayer.add(createGraphic360(panoramicJson[i]));
     }
     
-    function createGraphic(data){
+    function createGraphic360(data){
       var graphic =  new Graphic(data);
       graphic.symbol = markerSymbol;
        return graphic;
@@ -196,12 +223,13 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
     //地图
     const map = new Map({
       basemap: 'satellite',
-      layers:[self.xbLayer,gralayer]
+      layers:[testlayer,self.xbLayer,gralayer]
     });
 
     self.view = new MapView({
       map: map,
-      container: 'map',
+      container:self.$refs.map,
+      // container: 'map',
       zoom: 10,
       center: [114.31, 30.59],
     });
@@ -344,8 +372,9 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
 
     self.view.when(function(){     
       self.taskSelectorParam.visible = true //任务查询可见
-      openUpload.style.display = "block";
+      // openUpload.style.display = "block";
       renderer.style.display = "block";
+      // measure.style.display = "block";
 
       layerList.on("trigger-action", function(event) {
         var layer = event.item.layer; //被选图层
@@ -370,6 +399,18 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
         }
       })
 
+      //测量面积
+      // var draw = new Draw({
+      //   view: self.view
+      // });
+      
+      // var drawPolygonButton = document.getElementById("measure");
+      // drawPolygonButton.addEventListener("click", function() {
+      //   self.view.graphics.removeAll();
+      //   enableCreatePolygon(draw, self.view);
+      // });
+
+
       //360全景图片
       var arr = [];
       panoramicJson.map(function(dt){
@@ -387,7 +428,6 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
               var graphic = response.results.filter(function (result) {
               return result.graphic.layer === gralayer;
             })[0].graphic;
-            console.log(graphic.attributes.imgID);
             self.PhotoSphereViewerParam.visible = !self.PhotoSphereViewerParam.visible;
             self.PhotoSphereViewerParam.imgID = graphic.attributes.imgID;
          }
@@ -447,6 +487,102 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
       // })      
     })
 
+    function enableCreatePolygon(draw, view) {
+      // create() will return a reference to an instance of PolygonDrawAction
+      var action = draw.create("polygon");
+
+      // focus the view to activate keyboard shortcuts for drawing polygons
+      view.focus();
+
+      // listen to vertex-add event on the action
+      action.on("vertex-add", drawPolygon);
+
+      // listen to cursor-update event on the action
+      action.on("cursor-update", drawPolygon);
+
+      // listen to vertex-remove event on the action
+      action.on("vertex-remove", drawPolygon);
+
+      // *******************************************
+      // listen to draw-complete event on the action
+      // *******************************************
+      action.on("draw-complete", drawPolygon);
+    }
+
+    // this function is called from the polygon draw action events
+    // to provide a visual feedback to users as they are drawing a polygon
+    function drawPolygon(event) {
+      var vertices = event.vertices;
+
+      //remove existing graphic
+      self.view.graphics.removeAll();
+
+      // create a new polygon
+      var polygon = createPolygon(vertices);
+
+      // create a new graphic representing the polygon, add it to the view
+      var graphic = createGraphic(polygon);
+      self.view.graphics.add(graphic);
+
+      // calculate the area of the polygon
+      var area = geometryEngine.geodesicArea(polygon, "square-meters");
+      if (area < 0) {
+        // simplify the polygon if needed and calculate the area again
+        var simplifiedPolygon = geometryEngine.simplify(polygon);
+        if (simplifiedPolygon) {
+          area = geometryEngine.geodesicArea(simplifiedPolygon, "square-meters");
+        }
+      }
+      // start displaying the area of the polygon
+      labelAreas(polygon, area);
+    }
+
+    // create a polygon using the provided vertices
+    function createPolygon(vertices) {
+      return new Polygon({
+        rings: vertices,
+        spatialReference: self.view.spatialReference
+      });
+    }
+
+    // create a new graphic representing the polygon that is being drawn on the view
+    function createGraphic(polygon) {
+      var graphic = new Graphic({
+        geometry: polygon,
+        symbol: {
+          type: "simple-fill", // autocasts as SimpleFillSymbol
+          color: [178, 102, 234, 0.8],
+          style: "solid",
+          outline: { // autocasts as SimpleLineSymbol
+            color: [255, 255, 255],
+            width: 2
+          }
+        }
+      });
+      return graphic;
+    }
+
+    //Label polyon with its area
+    function labelAreas(geom, area) {
+      var graphic = new Graphic({
+        geometry: geom.centroid,
+        symbol: {
+          type: "text",
+          color: "white",
+          haloColor: "black",
+          haloSize: "1px",
+          text: area.toFixed(2) + " 平方米",
+          xoffset: 3,
+          yoffset: 3,
+          font: { // autocast as Font
+            size: 14,
+            family: "sans-serif"
+          }
+        }
+      });
+      self.view.graphics.add(graphic);
+    }
+
     //显示管护措施表格
     function GHTb(Id){
       self.expandTableParam.visible = !self.expandTableParam.visible;
@@ -454,11 +590,29 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
       self.expandTableParam.XBId = Id;
     }
 
+    function openHistTb(XBH){
+      self.historyTableParam.visible = !self.historyTableParam.visible;
+      self.historyTableParam.XBH = XBH;
+    }
+
     self.view.popup.on("trigger-action", function(event) {
-      if (event.action.id === "GHCS_id") {
-        let Id = event.target.selectedFeature.attributes.XBH;
-        GHTb(Id)
+      switch (event.action.id){
+        case "GHCS_id":
+          var Id = event.target.selectedFeature.attributes.XBH;
+          GHTb(Id);
+          break;
+        case "Hist_id":
+          var XBH = event.target.selectedFeature.attributes.XBH;
+          openHistTb(XBH);
+          break;
+        default:
+          // console.log("sss")
+          break;
       }
+      // if (event.action.id === "GHCS_id") {
+      //   let Id = event.target.selectedFeature.attributes.XBH;
+      //   GHTb(Id)
+      // }
     });
 
     //窗口组件
@@ -487,8 +641,8 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
 
     const print = new Print({
       view: self.view,
-      // printServiceUrl:"http://223.255.43.21:6080/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
-      printServiceUrl:"http://202.114.148.160:8000/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
+      printServiceUrl:"http://223.255.43.21:6080/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
+      // printServiceUrl:"http://202.114.148.160:8000/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
       container: document.createElement("div")  
     })
 
@@ -527,30 +681,37 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
         position: "top-right",
         index: 2
       },
+      // {
+      //   component: measure,
+      //   position: "top-right",
+      //   index: 3
+      // },
       {
         component: compass,
         position: "top-left",
         index: 2
       },
-      {
-        component: openUpload,
-        position: "top-left",
-        index: 4
-      },
+      // {
+      //   component: openUpload,
+      //   position: "top-left",
+      //   index: 4
+      // },
       {
         component: renderer,
         position: "top-left",
-        index: 5
+        index: 3
+      },  
+      {
+        component: taskExp,
+        position: "top-left",
+        index: 4
       },
       {
         component: legend,
         position: "bottom-right",
         index: 0
-      },{
-        component: taskExp,
-        position: "top-left",
-        index: 3
-      },{
+      },
+      {
         component: expandTb,
         position: "bottom-left",
         // index: 4
@@ -559,6 +720,10 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
         component: fieldTb,
         position: "bottom-left",
         // index: 4
+      },
+      {
+        component:historyTb,
+        position: "bottom-left",        
       }
       
       // {

@@ -6,10 +6,14 @@ import { getToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   // baseURL: process.env.BASE_API, // api 的 base_url
-  // baseURL: "http://223.255.43.21/WHLDWebApi/api/", // api 的 base_url
-  baseURL: "http://202.114.148.160/WHLDWebApi/api/", // api 的 base_url
+  baseURL: "http://223.255.43.21:82/WHLDWebApi2/api/", // api 的 base_url
+  // baseURL: "http://202.114.148.160/WHLDWebApi/api/", // api 的 base_url
+  // baseURL:"http://202.114.148.160/whldwebapi2/api",
+  // baseURL:"http://localhost:42501/api",
   timeout: 5000 // request timeout
 })
+
+
 
 // request interceptor
 service.interceptors.request.use(
@@ -18,6 +22,8 @@ service.interceptors.request.use(
     if (store.getters.token) {
       // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
       // config.headers['X-Token'] = getToken()
+      // config.headers['content-type'] =  'application/x-www-form-urlencoded'
+      // config.headers['Authorization'] = "Bearer " + store.getters.token;
     }
     return config
   },

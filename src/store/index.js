@@ -7,6 +7,7 @@ import user from './modules/user'
 import map from './modules/map'
 import xbInfo from './modules/xbInfo'
 import tableRow from './modules/tableRow'
+import permission from './modules/permission'
 import getters from './getters'
 
 Vue.use(Vuex)
@@ -17,7 +18,8 @@ const store = new Vuex.Store({
     user,
     map,
     xbInfo,
-    tableRow
+    tableRow,
+    permission
   },
   getters
 })

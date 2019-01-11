@@ -1,7 +1,9 @@
 
 export function isvalidUsername(str) {
-    const valid_map = ['admin', 'editor','Jiangxia','Hongshan']
-    return valid_map.indexOf(str.trim()) >= 0
+    // const valid_map = ['admin', 'editor','Jiangxia','Hongshan']
+    // return valid_map.indexOf(str.trim()) >= 0
+
+    return true;
   }
   
   /* 合法uri*/

@@ -6,8 +6,9 @@ const getters = {
     // visitedViews: state => state.tagsView.visitedViews,
     // cachedViews: state => state.tagsView.cachedViews,
     token: state => state.user.token,
+    username: state => state.user.name,
     avatar: state => state.user.avatar,
-    name: state => state.user.name,
+    district: state => state.user.district,
     introduction: state => state.user.introduction,
     status: state => state.user.status,
     roles: state => state.user.roles,
@@ -15,7 +16,9 @@ const getters = {
     definitionExpression:state => state.map.layer.definitionExpression,
     enXBInfo:state => state.xbInfo.enXBInfo,
     cnXBInfo:state => state.xbInfo.cnXBInfo,
-    tableRow:state => state.tableRow.tableRow
+    tableRow:state => state.tableRow.tableRow,
+    permission_routers: state => state.permission.routers,
+    addRouters: state => state.permission.addRouters,
 
     // errorLogs: state => state.errorLog.logs
   }

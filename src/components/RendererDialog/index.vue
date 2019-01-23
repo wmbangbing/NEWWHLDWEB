@@ -10,7 +10,7 @@
         <el-select @change="uniqueChange"  style="width:100%" v-model="value1" placeholder="请选择字段">
           <el-option
             v-for="item in options1"
-            :key="item.value"
+            :key="item.value" 
             :label="item.label"
             :value="item.value">
           </el-option>
@@ -48,6 +48,21 @@
           </el-row>                               
         </div>             
       </el-tab-pane>
+      <el-tab-pane label="按管护状态渲染">
+        <el-cascader style="width:100%;margin-top:10px"
+          expand-trigger="hover"
+          :options="GhOptions"
+          v-model="selectedOptions"
+          @change="handleChange">
+        </el-cascader>  
+        <div v-bind:key="item.name" v-for="item in GhItems" class="colorRow">    
+          <P>{{item.name}}</P> 
+          <el-row>
+            <el-col :span="21"><div class="grid-content bg-purple" v-bind:style="{background:item.color}"></div></el-col>
+            <el-col :span="2"><el-color-picker v-model="item.color"></el-color-picker> </el-col>
+          </el-row>                               
+        </div>             
+      </el-tab-pane>
     </el-tabs>
     <!-- </el-scrollbar>  -->
     <span slot="footer" class="dialog-footer">
@@ -60,6 +75,8 @@
 
 <script>
   import { createHR } from '@/utils/color'
+  import { getPassTask } from '@/api/task'
+  import store from '../../store'
 
   export default {
     name: '',
@@ -128,11 +145,25 @@
             min:0,
           }
         },
+        GhOptions:[],
+        GhItems:[
+          {
+            name:"未完成",
+            color:"#D53434",
+          },{
+            name:"已完成",
+            color:"#EAFF00",
+          },{
+            name:"已检查",
+            color:"#55FF00",
+        }],
         valueItems:[],
         valueField:null,
         klass:null,
         dialogVisible:this.rendererParam.visible,
-        renderer:null
+        renderer:null,
+        options: [],
+        selectedOptions: [],
       }
     },  
     props:['rendererParam'],
@@ -166,6 +197,35 @@
       },
       "rendererParam.visible":function(){
         this.dialogVisible = true;
+        getPassTask(store.getters.district).then(response =>{
+          console.log(response.data);
+          response.data.map(d => {
+            var levelone = {
+              label:d.TaskName,
+              value:d.TId,
+              children:[]
+            }
+
+            var arr = []
+            d.TaskInfo.map(t => {
+              t.TaskInfo_Ghcs_Rel.map(g =>{
+                arr.push(g.Ghcs.Measure)
+              })
+            })
+          
+            var GhArr = this.removeDuplicateItems(arr);
+            GhArr.map(g => {
+              var leveltwo = {
+                label:g,
+                value:g,
+              }
+              levelone.children.push(leveltwo);
+            })
+
+            this.GhOptions.push(levelone);
+          
+          }) 
+        })    
       }
     },
     methods:{
@@ -259,9 +319,15 @@
       handleClick(tab,event){
         this.tabID = tab.index;
       },
-       closeDialog(){
+      handleChange(val){
+        console.log(val)
+      },
+      closeDialog(){
         this.dialogVisible = false;
       },
+      removeDuplicateItems(arr) {
+        return [...new Set(arr)];
+      }
     }
   }
 </script>

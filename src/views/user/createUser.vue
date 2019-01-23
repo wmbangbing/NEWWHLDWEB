@@ -28,6 +28,8 @@
           <el-option label="江夏" value="江夏区"></el-option>
           <el-option label="新洲" value="新洲区"></el-option>
           <el-option label="东西湖" value="东西湖区"></el-option>
+            <el-option label="东湖高新" value="东湖高新区"></el-option>
+          <el-option label="汉西苗圃" value="汉西苗圃"></el-option>
           <!-- <el-option label="洪山东湖高新" value="洪山东湖高新"></el-option> -->
         </el-select>
         <el-select :clearable=true v-else v-model="userForm.district" style="width:100%" key="admin">
@@ -67,7 +69,7 @@
         createRules:{
           username: [
             { required: true, message: '用户名不能为空', trigger: 'blur' },
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+            { min: 3, max: 12, message: '长度在 3 到 12 个字符', trigger: 'blur' }
           ],
           password: [
             { required: true, message: '密码不能为空', trigger: 'blur' },
@@ -116,14 +118,14 @@
             }
 
             createUser(data).then(res => {
-              if(result.status == 200){
+              if(res.status == 200){
                 this.$message({
-                  message:"修改成功",                
+                  message:"创建成功",                
                   type:"success"
                 })
               }else{
                  this.$message({
-                  message:"修改失败",                
+                  message:"创建失败",                
                   type:"error"
                 })
               }

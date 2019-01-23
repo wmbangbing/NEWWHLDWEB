@@ -87,6 +87,8 @@ export default  {
       },
       selectId:[],
       xbLayer:undefined,
+      rendererlayer:undefined,
+      map:undefined,
       view:undefined,
       renderer:null
     }
@@ -127,11 +129,15 @@ export default  {
     },
     moveToDK(XBH){
       var query = this.xbLayer.createQuery();
-      query.where = `XBH = ${XBH}`;
+      // debugger;
+      // var XBH = parseInt(XBHStr);
+      // query.where = `new = ${XBHStr}`;
+      query.where = `XBH = '${XBH}'`;
       query.outFields = [ "XBH" ];
       query.returnGeometry = true;
 
       this.xbLayer.queryFeatures(query).then(reponse =>{
+        console.log(reponse);
         var obj = {
           center:reponse.features[0].geometry.centroid,
           scale:1000

@@ -5,7 +5,7 @@ import qs from 'qs'
 export function putData(data) {
   return request({
     url: '/XBInfo/upload',
-    method:"put",
+    method:"post",
     data:qs.stringify(data),
     headers:{
       'Content-Type':'application/x-www-form-urlencoded'

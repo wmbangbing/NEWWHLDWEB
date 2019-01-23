@@ -44,7 +44,7 @@
         label="任务时间"
         prop="DateTime">
       </el-table-column> -->
-      <el-table-column label="小班号" width="100%">
+      <el-table-column label="小班号" width="130">
         <template  slot-scope="scope">
           <span>{{ scope.row.XBH }}</span>
         </template>
@@ -54,7 +54,7 @@
           <span>{{ scope.row.XBMJ }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="任务名" width="100%">
+      <el-table-column label="任务名" width="80%">
         <template  slot-scope="scope">
           <span>{{ scope.row.TaskName }}</span>
         </template>
@@ -64,7 +64,7 @@
           <span>{{ scope.row.Principal }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="通过时间" align="center"  width="200px">
+      <el-table-column label="通过时间" align="center"  width="180px">
         <template  slot-scope="scope">
           <span>{{ scope.row.ReviewTime }}</span>
         </template>
@@ -72,7 +72,7 @@
        <el-table-column label="详细信息" align="center" width="200px">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <el-table width="800px" :data="scope.row.GHCS">             
+            <el-table width="800px" align="center" :data="scope.row.GHCS">             
               <el-table-column label="管护措施" width="100px">
                 <template slot-scope="scope">
                   <span>{{ scope.row.Measure }}</span>
@@ -83,17 +83,24 @@
                   <span>{{ scope.row.ImpArea }}</span>
                 </template>
               </el-table-column>
-               <el-table-column label="审核人" width="100px">
+              <el-table-column label="现场审查人" width="100px">
                 <template slot-scope="scope">
-                  <span>暂无</span>
+                  <span>{{ scope.row.Auditor }}</span>
                 </template>
               </el-table-column>      
-               <el-table-column label="审核状态" width="100px">
+              <el-table-column label="实施状态" width="100px">
                 <template slot-scope="scope">
-                  <!-- <span>{{ scope.row.ImpArea }}</span> -->
-                  <el-tag size="medium" type="info">未审核</el-tag>
+                  <el-tag size="medium" :type="scope.row.Status | statusFilter ">{{scope.row.Status | zhStatus }}</el-tag>
                 </template>
-              </el-table-column>                        
+              </el-table-column>
+              <el-table-column
+                fixed="right"
+                label="操作"
+                width="100">
+                <template slot-scope="scope">
+                  <el-button v-permission="['district']" :disabled="scope.row.Status | disable" type="text" size="medium" @click="checkProcess(scope.row,'unreviewed')">确认完成</el-button>
+                </template>
+              </el-table-column>                     
             </el-table>
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">管护相关信息</el-tag>
@@ -102,13 +109,23 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <el-dialog :close-on-click-modal=false :modal=false title="确认" :visible.sync="dialogVisible" width="30%">
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="confirm">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
 import axios from "axios"
 // import { getFormData } from '@/api/formData'
 import { getXBInfoByXBH } from '@/api/xbInfo'
+import { changeGhcsStatus } from '@/api/task'
 import { fadeOut,fadeIn } from '@/utils/style'
+import elDragDialog from '@/directive/el-dragDialog' //
+import permission from '@/directive/permission/index.js'
 
 
 export default {
@@ -116,16 +133,48 @@ export default {
     return {
       tableData:[],
       loading:true,
+      dialogVisible:false,
+      ghcs_msg:{
+        PGId:undefined,
+        Status:undefined
+      }
     }
   },
   props:[
     "expandTableParam"
   ],
+  directives: { elDragDialog,permission },
   watch:{
     "expandTableParam.visible":function(curVal,oldVal){
       // expandTb.style.display = "block";
       fadeIn(expandTb);
       this.getData();
+    }
+  },
+  filters:{
+    statusFilter(status){  
+      const statusMap = {
+        unfinished: 'warning',
+        unreviewed: 'warning',
+        reviewed: 'success'
+      }
+      return statusMap[status]
+    },
+    zhStatus(status){
+      const statusMap = {
+        unfinished: '未完成',
+        unreviewed: '未审查',
+        reviewed: '审查完毕',
+      }
+      return statusMap[status]
+    },
+    disable(status){
+      const statusMap = {
+        unreviewed: true,
+        unfinished: false,
+        reviewed: true
+      }
+      return statusMap[status]
     }
   },
   methods: {
@@ -152,6 +201,7 @@ export default {
         var tableData = [];
         var taskId = this.expandTableParam.task;
         console.log(data);
+        console.log(taskId);
         if(taskId == null){
           for(let i = 0;i < data.TaskInfo.length;i++){
             if(data.TaskInfo[i].Task.Status == "pass"){
@@ -169,6 +219,9 @@ export default {
                 var t = {
                   ImpArea:data.TaskInfo[i].TaskInfo_Ghcs_Rel[j].ImpArea,
                   Measure:data.TaskInfo[i].TaskInfo_Ghcs_Rel[j].Ghcs.Measure,
+                  Auditor:data.TaskInfo[i].TaskInfo_Ghcs_Rel[j].Auditor,
+                  Status:data.TaskInfo[i].TaskInfo_Ghcs_Rel[j].Status,
+                  PGId:data.TaskInfo[i].TaskInfo_Ghcs_Rel[j].PGId,
                   Id:j
                 }
                 s.GHCS.push(t)
@@ -212,6 +265,9 @@ export default {
                 // tableData[0].GHCS[j].Desc = "";
                 tableData[0].GHCS[j].Measure = data.TaskInfo[i].TaskInfo_Ghcs_Rel[j].Ghcs.Measure;
                 tableData[0].GHCS[j].ImpArea = data.TaskInfo[i].TaskInfo_Ghcs_Rel[j].ImpArea;
+                tableData[0].GHCS[j].Auditor = data.TaskInfo[i].TaskInfo_Ghcs_Rel[j].Auditor;
+                tableData[0].GHCS[j].Status = data.TaskInfo[i].TaskInfo_Ghcs_Rel[j].Status;     
+                tableData[0].GHCS[j].PGId = data.TaskInfo[i].TaskInfo_Ghcs_Rel[j].PGId;     
                 tableData[0].GHCS[j].Id = j;
               }         
             }
@@ -265,6 +321,35 @@ export default {
       expandTb.style.display = "none";
       this.loading = true;
       this.expandTableParam.task = null;
+    },
+    checkProcess(row,status){
+      this.dialogVisible = true;
+      if(row.Status == "unfinished"){
+        this.ghcs_msg.Status = status;
+        this.ghcs_msg.PGId = row.PGId
+      }else{
+        this.$message({
+          message: '状态错误！',
+          type: 'success'
+        })
+      }    
+    },
+    confirm(){
+      console.log(this.ghcs_msg);
+      changeGhcsStatus(this.ghcs_msg).then(res=>{
+        if(res.status == 200){
+          this.$message({
+            message: '修改成功',
+            type: 'success'
+          })
+          this.getData();
+        }else{
+          this.$message({
+            message: '修改失败',
+            type: 'error'
+          })
+        }
+      })
     }
   },
 }

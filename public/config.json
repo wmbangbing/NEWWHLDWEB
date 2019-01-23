@@ -1,0 +1,7 @@
+{
+  "baseUrl": "http://localhost:42501/api",
+  "esriUrl": "http://223.255.43.21:82/arcgis_js_api4.8/library/4.8",
+  "whldVec":"http://223.255.43.21:6080/arcgis/rest/services/WHLD_Group/WHLD_2019/MapServer",
+  "whldRst":"http://223.255.43.21:6080/arcgis/rest/services/WHLD_Group/WHLDIMG/MapServer",
+  "esriPrint":"http://223.255.43.21:6080/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+}

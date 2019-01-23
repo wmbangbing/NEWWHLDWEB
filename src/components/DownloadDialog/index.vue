@@ -57,7 +57,8 @@
           if(this.value == "最新"){
             const tHeader = cnKeys;
             const filterVal = cnKeys;
-            const data = this.formatJson(filterVal, replaceKey(this.$store.getters.enXBInfo,enKeys,cnKeys))
+            const data = this.formatJson(filterVal, replaceKey(this.$store.getters.enXBInfo,enKeys,cnKeys));
+            debugger;
             this.saveAs(excel,tHeader,data,this.name)
 
           }else{
@@ -71,6 +72,7 @@
         })
       },
       saveAs(excel,tHeader,data,name){
+        console.log(data);
         excel.export_json_to_excel({
           header: tHeader,
           data,

@@ -34,19 +34,55 @@
         <el-table-column
           prop="XBH"
           fixed
+          width="120"    
           label="小班号">
+        </el-table-column>
+         <el-table-column
+          prop="NewID"
+          width="180"    
+          label="小班全编号">
         </el-table-column>
         <el-table-column
           prop="DWMC"
-          label="县/区">
+          width="100" 
+          label="管理所属">
+        </el-table-column>
+         <el-table-column
+          prop="XIAN"
+          label="县/区代码">
         </el-table-column>
         <el-table-column
           prop="XIANG"
-          label="乡/街道">
+          width="100" 
+          label="乡/街道代码">
         </el-table-column>
         <el-table-column
           prop="CUN"
-          label="村/社区">
+          width="100" 
+          label="村/社区代码">
+        </el-table-column>
+        <el-table-column
+          prop="LIN_BAN"
+          label="林班代码">
+        </el-table-column>
+        <el-table-column
+          prop="XIAO_BAN"
+          label="小班代码">
+        </el-table-column>
+          <el-table-column
+          prop="XIAN_NAME"
+          width="110"
+          label="县/区名称">
+        </el-table-column>
+        <el-table-column
+          prop="XIANG_NAME"
+          width="100" 
+          label="乡/街道名称">
+        </el-table-column>
+        <el-table-column
+          prop="CUN_NAME"
+          width="100" 
+          label="村/社区名称">
         </el-table-column>
         <el-table-column
           prop="XBMJ"
@@ -73,7 +109,7 @@
           label="纬度">
         </el-table-column>
         <el-table-column
-          prop="LDQS"
+          prop="TDQS"
           label="林地权属">
         </el-table-column>
         <el-table-column
@@ -274,7 +310,7 @@ export default {
           })
         })
       }
-      console.log(this.tableData);
+      // console.log(this.tableData);
       return this.tableData
     }
   },

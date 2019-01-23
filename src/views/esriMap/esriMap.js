@@ -144,12 +144,12 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
         type: "fields",
         fieldInfos: [{
           fieldName: "DWMC",
-          label: "区",
+          label: "管理所属",
         },{
-          fieldName: "XIANG",
+          fieldName: "XIANG_NAME",
           label: "街道",
         },{
-          fieldName: "CUN",
+          fieldName: "CUN_NAME",
           label: "村",
         },{
           fieldName: "XBMJ",
@@ -166,7 +166,9 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
     //基础图层
     self.xbLayer = new FeatureLayer({
       // url:"http://202.114.148.160:8000/arcgis/rest/services/LinYeMapService/whld_2018/MapServer/0",
-      url:"http://223.255.43.21:6080/arcgis/rest/services/WHLD_Group/WHLD/MapServer",
+      // url:"http://223.255.43.21:6080/arcgis/rest/services/WHLD_Group/WHLD/MapServer",
+      // url:"http://202.114.148.160:8000/arcgis/rest/services/LinYeMapService/whld_2019_1/MapServer",
+      url:"http://223.255.43.21:6080/arcgis/rest/services/WHLD_Group/WHLD_2019/MapServer",
       outFields:["*"],
       visible: true,
       title:"小班图层",
@@ -194,7 +196,7 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
     // })
 
     const testlayer = new TileLayer({
-      url:"http://202.114.148.160:8000/arcgis/rest/services/LinYeMapService/WHLDIMG/MapServer"
+      url:"http://223.255.43.21:6080/arcgis/rest/services/WHLD_Group/WHLDIMG/MapServer"
     })
 
     //360图层
@@ -221,13 +223,13 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
     }
 
     //地图
-    const map = new Map({
+    self.map = new Map({
       basemap: 'satellite',
       layers:[testlayer,self.xbLayer,gralayer]
     });
 
     self.view = new MapView({
-      map: map,
+      map: self.map,
       container:self.$refs.map,
       // container: 'map',
       zoom: 10,
@@ -436,6 +438,7 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
     });
 
     self.xbLayer.when(()=>{
+      console.log(self.xbLayer)
       self.view.goTo(self.xbLayer.fullExtent);
 
       const homeWidget = new Home({
@@ -736,4 +739,62 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
   .catch(err => {
     console.error(err);
   });
+}
+
+export const test = function(esriLoader, options, self){
+  esriLoader.loadModules(
+    [
+      'esri/Map',
+      "esri/Basemap",
+      "esri/Viewpoint",
+      "esri/Graphic",
+      "esri/geometry/Polygon",
+      "esri/geometry/geometryEngine",
+      'esri/views/MapView',
+      "esri/layers/FeatureLayer",
+      "esri/layers/WebTileLayer",
+      "esri/layers/TileLayer",
+      "esri/layers/GraphicsLayer",
+      "esri/layers/MapImageLayer",
+      "esri/widgets/Expand",
+      "esri/widgets/Home",
+      "esri/widgets/LayerList",
+      "esri/widgets/BasemapGallery",
+      "esri/widgets/Legend",
+      "esri/widgets/Compass",
+      "esri/widgets/Print",
+      "esri/views/2d/draw/Draw",
+      "esri/core/urlUtils",
+    ],options)
+  .then(
+    ([
+      Map,
+      Basemap,
+      Viewpoint,
+      Graphic,
+      Polygon,
+      geometryEngine,
+      MapView,
+      FeatureLayer,
+      WebTileLayer,
+      TileLayer,
+      GraphicsLayer,
+      MapImageLayer,
+      Expand,
+      Home,
+      LayerList,
+      BasemapGallery,
+      Legend,
+      Compass,
+      Print,
+      Draw,
+      urlUtils
+    ]) => {
+      var layer = new FeatureLayer({
+        url:"http://223.255.43.21:6080/arcgis/rest/services/WHLD_Group/WHLD_2019/MapServer"
+      });
+
+      self.map.add(layer);
+    }
+  )
 }

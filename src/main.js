@@ -12,6 +12,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 import '@/styles/index.scss' // global css
 
+import configJson from "../public/config.json"
 
 // import './mock' 
 import './permission'
@@ -25,6 +26,8 @@ Vue.use(Element,{
 });
 
 Vue.config.productionTip = false
+
+Vue.prototype.SERVSER_CONFIG = configJson;
 
 new Vue({
   store,

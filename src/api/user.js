@@ -34,7 +34,7 @@ export function getUserInfo(token) {
 export function createUser(data){
   return request({
     url: 'user/register',
-    method: 'put',
+    method: 'post',
     params: { 
       username:data.username,
       password:data.password,

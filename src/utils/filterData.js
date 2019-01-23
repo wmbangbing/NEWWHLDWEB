@@ -82,14 +82,14 @@ export function constructTaskData(data){
           XBH:x.XBH,
           Measure:y.Ghcs.Measure,
           XBMJ:x.XBInfo.XBMJ,
-          ImpArea:y.ImpArea
+          ImpArea:y.ImpArea,
+          GhStatus:y.Status
         }
         levelOne.TaskInfo.push(levelTwo);
       })
     })
     tableData.push(levelOne);
   })
-
   // for(let i = 0;i < data.TaskInfo.length;i++){
   //   var s = {
   //     XBH:data.XBH,
@@ -112,4 +112,46 @@ export function constructTaskData(data){
   //   tableData.push(s);
   // }
   return tableData;
+}
+
+export function constructGhData(data){
+  var d = data.filter((item) => {
+    return item.TaskInfo.length != 0 && item.TaskInfo.some( tItem => {
+      return tItem.GhStatus === "unreviewed"
+    })
+  })
+
+  var res = [];
+
+  d.map(i => {
+    var GhInfo = i.TaskInfo.filter(j => {
+      return j.GhStatus === "unreviewed"
+    })
+
+    GhInfo.map(x => {
+      var obj = {
+        ["区"]:i.District,   
+        ["任务名"]:i.TaskName,
+        ["任务负责人"]:i.Principal,
+        ["提交时间"]:i.SubmissionTime,      
+        ["小班号"]:x.XBH,
+        ["管护措施"]:x.Measure,
+        ["实施面积"]:x.ImpArea,
+        ["小班面积"]:x.XBMJ
+      };
+      var obj1 = {
+        District:i.District,   
+        TaskName:i.TaskName,
+        Principal:i.Principal,
+        SubmissionTime:i.SubmissionTime,      
+        XBH:x.XBH,
+        Measure:x.Measure,
+        ImpArea:x.ImpArea,
+        XBMJ:x.XBMJ
+      };
+      res.push(obj);
+    })
+    
+  })
+  return res;
 }

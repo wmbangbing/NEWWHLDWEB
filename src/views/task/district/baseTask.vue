@@ -40,7 +40,7 @@
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="right">
             <el-table width="800px" :data="scope.row.TaskInfo">
-              <el-table-column label="小班号" width="100px">
+              <el-table-column label="小班号" width="120px">
                 <template slot-scope="scope">
                   <span>{{ scope.row.XBH }}</span>
                 </template>
@@ -170,12 +170,10 @@
         })
       },
       handleSizeChange(val) {
-        this.listQuery.limit = val
-        this.getList()
+        this.pagesize = val
       },
       handleCurrentChange(val) {
-        this.listQuery.page = val
-        this.getList()
+        this.currentPage = val
       },
       refreshTaskList(){
         this.getList();

@@ -36,8 +36,8 @@ export const constantRouterMap = [
         meta: { title: '二维', icon: '2dmap' }
       },
       {
-        // "path": "http://223.255.43.21:82/treeTest",
-        "path": "http://202.114.148.160/qctest/treeTest/",
+        "path": "http://223.255.43.21:82/treeTest",
+        // "path": "http://202.114.148.160/qctest/treeTest/",
         // path: 'sceneview',
         // name: 'SceneView',
         // component: () => import('@/views/esriScene/index'),
@@ -132,13 +132,33 @@ export const asyncRouterMap = [
       //   }
       // },
       {
-        path: 'admin',
-        name: 'admin',
+        path: 'adminReview',
+        name: 'adminReview',
         component: () => import('@/views/task/admin/index'),
         meta: { 
           title: '任务审查', 
           icon: 'review' ,
           roles: ['admin'] 
+        }
+      },
+      {
+        path: 'adminRelease',
+        name: 'adminRelease',
+        component: () => import('@/views/task/admin/releaseTask'),
+        meta: { 
+          title: '任务发布', 
+          icon: 'release' ,
+          roles: ['admin'] 
+        }
+      },
+      {
+        path: 'inquireTask',
+        name: 'inquireTask',
+        component: () => import('@/views/task/inquireTask'),
+        meta: { 
+          title: '实施查询', 
+          icon: 'release' ,
+          // roles: ['admin'] 
         }
       },
       {
@@ -160,7 +180,17 @@ export const asyncRouterMap = [
           icon: 'upload',
           roles: ['district'] 
         },
-      }
+      },
+      {
+        path: 'adminTask',
+        name: 'adminTask',
+        component: () => import('@/views/task/admin/releaseTask'),
+        meta: { 
+          title: '林业局任务', 
+          icon: 'release' ,
+          roles: ['district'] 
+        }
+      },
     ]
   },
   {

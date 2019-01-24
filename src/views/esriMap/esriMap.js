@@ -1,4 +1,4 @@
-export const createMap = function (esriLoader, options,panoramicJson, self) {
+export const createMap = function (esriLoader, options, panoramicJson, self) {
   esriLoader.loadModules(
     [
       'esri/Map',
@@ -741,7 +741,7 @@ export const createMap = function (esriLoader, options,panoramicJson, self) {
   });
 }
 
-export const test = function(esriLoader, options, self){
+export const createRendererLayer = function(esriLoader, options, self, rdrParams){
   esriLoader.loadModules(
     [
       'esri/Map',
@@ -790,11 +790,89 @@ export const test = function(esriLoader, options, self){
       Draw,
       urlUtils
     ]) => {
-      var layer = new FeatureLayer({
-        url:"http://223.255.43.21:6080/arcgis/rest/services/WHLD_Group/WHLD_2019/MapServer"
+      //创建渲染图层
+      self.rdrLayer = new FeatureLayer({
+        fields:[{
+          name: "XBH",
+          alias: "XBH",
+          type: "oid",
+        },{
+          name: "Status",
+          alias: "Status",
+          type: "oid",
+        }],
+        objectIdField: "XBH",
+        geometryType: "polygon",
+        popupTemplate: {
+          content: "{XBH}{Status}"
+        },
+        opacity: 0.8,
+        definitionExpression: self.$store.getters.definitionExpression,
       });
 
-      self.map.add(layer);
+      //添加属性
+      self.xbLayer.queryFeatures().then(res =>{
+        var features = res.features;
+
+        features.map(feature =>{
+          var d = rdrParams.resArr.filter(arr =>{
+            return arr.XBH == feature.attributes.XBH
+          })
+
+          if(d.length > 0){ 
+            Object.assign(feature.attributes,{
+              Status:d[0].Status
+            })
+          }else{
+            Object.assign(feature.attributes,{
+              Status:"Null"
+            })
+          }
+
+        });
+        
+        self.rdrLayer.source = features;
+        self.rdrLayer.renderer = createRenderer();
+
+        self.map.add(self.rdrLayer);
+        
+      })
+
+      function createRenderer(){
+        var uniqueValueInfos = [{
+          value:"unfinished",
+          symbol: {
+            type: "simple-fill",
+            color: rdrParams.options[0].color
+          }
+        },{
+          value:"unreviewed",
+          symbol: {
+            type: "simple-fill",
+            color: rdrParams.options[1].color
+          }
+        },{
+          value:"reviewed",
+          symbol: {
+            type: "simple-fill",
+            color: rdrParams.options[2].color
+          }
+        },{
+          value:"Null",
+          symbol: {
+            type: "simple-fill",
+            color: "white"
+          }
+        }];
+
+        return {
+          type: "unique-value",
+          field: "Status",
+          defaultSymbol: { type: "simple-fill" }, 
+          uniqueValueInfos: uniqueValueInfos
+        }
+      }
+      
     }
   )
 }

@@ -14,7 +14,7 @@
   <UploadTaskDialog id="UploadTask" :UploadTaskParam=UploadTaskParam  @refreshTaskSel="refreshTaskSel" />
   <DownloadDialog :DownloadParam=DownloadParam />
   <row-edit :rowEditParam=rowEditParam />
-  <RendererDialog @renderer="rendererXBLayer" :rendererParam=rendererParam />
+  <RendererDialog @renderer="rendererXBLayer" @GhRenderer="GhRenderer" @removeRdrLayer="removeRdrLayer" :rendererParam=rendererParam />
   <PhotoSphereViewerDialog :PhotoSphereViewerParam=PhotoSphereViewerParam />
   <!-- <QueryDialog /> -->
 </div>
@@ -34,7 +34,7 @@ import UploadTaskDialog from '@/components/UploadTaskDialog'
 import DownloadDialog from '@/components/DownloadDialog' 
 import RendererDialog from '@/components/RendererDialog' 
 import PhotoSphereViewerDialog from '@/components/PhotoSphereViewerDialog' 
-import {createMap} from "./esriMap"
+import { createMap, createRendererLayer } from "./esriMap"
 import panoramicJson from "@/assets/json/panoramic.json"
 // import { unique } from '@/utils/filterData'
 
@@ -87,10 +87,15 @@ export default  {
       },
       selectId:[],
       xbLayer:undefined,
-      rendererlayer:undefined,
+      rdrLayer:undefined,
       map:undefined,
       view:undefined,
-      renderer:null
+      renderer:null,
+      esriOptions:{
+        url: 'http://223.255.43.21:82/arcgis_js_api4.8/library/4.8/dojo/dojo.js',
+        // url: 'http://202.114.148.160/arcgis_js_api4.8/library/4.8/dojo/dojo.js',
+        // url:'https://js.arcgis.com/4.10/'
+      }
     }
   },
   components:{
@@ -113,12 +118,12 @@ export default  {
   },
   methods:{
     initMap(self){
-      const options = {
-        url: 'http://223.255.43.21:82/arcgis_js_api4.8/library/4.8/dojo/dojo.js',
-        // url: 'http://202.114.148.160/arcgis_js_api4.8/library/4.8/dojo/dojo.js',
-        // url:'https://js.arcgis.com/4.10/'
-      };
-      createMap(esriLoader,options,panoramicJson,self)
+      // const options = {
+      //   url: 'http://223.255.43.21:82/arcgis_js_api4.8/library/4.8/dojo/dojo.js',
+      //   // url: 'http://202.114.148.160/arcgis_js_api4.8/library/4.8/dojo/dojo.js',
+      //   // url:'https://js.arcgis.com/4.10/'
+      // };
+      createMap(esriLoader,self.esriOptions,panoramicJson,self)
       // createMap1(esriLoader,options);
     },
     getSelectedXBH(value){
@@ -162,8 +167,15 @@ export default  {
     },
     rendererXBLayer(renderer){
       this.xbLayer.renderer = renderer;
-      // this.xbLayer.opacity = 1;
-      
+      // this.xbLayer.opacity = 1;    
+    },
+    GhRenderer(rdrParams){
+      createRendererLayer(esriLoader,this.esriOptions,this,rdrParams)
+    },
+    removeRdrLayer(){
+      if(this.rdrLayer){
+        this.map.remove(this.rdrLayer);
+      }
     }
   },
 }

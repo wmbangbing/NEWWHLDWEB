@@ -52,8 +52,7 @@
         <el-cascader style="width:100%;margin-top:10px"
           expand-trigger="hover"
           :options="GhOptions"
-          v-model="selectedOptions"
-          @change="handleChange">
+          v-model="selectedOptions">
         </el-cascader>  
         <div v-bind:key="item.name" v-for="item in GhItems" class="colorRow">    
           <P>{{item.name}}</P> 
@@ -82,6 +81,7 @@
     name: '',
     data() {
       return {
+        originalData:undefined,
         options1: [{
           value: 'DWMC',
           label: '县/区'
@@ -197,8 +197,9 @@
       },
       "rendererParam.visible":function(){
         this.dialogVisible = true;
+        this.GhOptions = [];
         getPassTask(store.getters.district).then(response =>{
-          console.log(response.data);
+          this.originalData = response.data;
           response.data.map(d => {
             var levelone = {
               label:d.TaskName,
@@ -248,7 +249,7 @@
         this.klass = field;
       },
       confirm(){
-        if(!this.uniqueField&&!this.valueField){
+        if( !this.uniqueField && !this.valueField&& !this.selectedOptions){
           this.$message({
             message: '请选择后再确认！',
             type: 'warning'
@@ -271,9 +272,10 @@
             };
             uniqueRenderer.uniqueValueInfos.push(s);
           }     
-          console.log(uniqueRenderer);
           this.renderer = uniqueRenderer;
-        }else{
+          this.$emit("renderer",this.renderer);        
+        }
+        else if(this.tabID == 1){
           var classBreakRenderer = {
             type: "class-breaks", // autocasts as new ClassBreaksRenderer()
             field: this.valueField,
@@ -295,32 +297,73 @@
             };                     
             classBreakRenderer.classBreakInfos.push(s);
           }
-          console.log(classBreakRenderer);
           this.renderer = classBreakRenderer;
+          this.$emit("renderer",this.renderer);     
         }
-        this.$emit("renderer",this.renderer);
+        else{
+          this.GhRenderer();
+        }
+      },
+      GhRenderer(){
+        //取小班号
+        var arr = []
+        this.originalData.map(d => {
+           arr.push(d.TaskInfo.filter(t =>{
+            return t.TaskInfo_Ghcs_Rel.some(g =>{
+              return g.Ghcs.Measure == this.selectedOptions[1]
+            })
+          }))
+        })
+
+        console.log(arr);
+        //构建对应关系
+        var res = []
+        arr.map(a =>{ 
+          a.map(m => {
+            m.TaskInfo_Ghcs_Rel.map(g =>{
+              if(g.Ghcs.Measure == this.selectedOptions[1]){
+                var obj = {
+                  XBH:m.XBH,
+                  Measure:g.Ghcs.Measure,
+                  Status:g.Status
+                }
+                res.push(obj);
+              }
+            })
+          })        
+        })
+
+        var resParams = {
+          resArr:res,
+          options:this.GhItems
+        }
+
+        console.log(resParams);
+        this.$emit("GhRenderer",resParams);     
       },
       defaultRenderer(){
-        this.renderer = {
-          type: "simple", 
-          symbol: {
-            type: "simple-fill", 
-            size: 6,
-            color:[0, 255, 123, 0.1],
-            outline: { 
-              width: 0.5,
-              color: "red"
+        if(this.tabID != 2){
+            this.renderer = {
+            type: "simple", 
+            symbol: {
+              type: "simple-fill", 
+              size: 6,
+              color:[0, 255, 123, 0.1],
+              outline: { 
+                width: 0.5,
+                color: "red"
+              }
             }
-          }
-        };
-        this.$emit("renderer",this.renderer);
-        this.dialogVisible = false;
+          };
+          this.$emit("renderer",this.renderer);
+          this.dialogVisible = false;
+        }else{
+          this.$emit("removeRdrLayer");
+        }
+      
       },
       handleClick(tab,event){
         this.tabID = tab.index;
-      },
-      handleChange(val){
-        console.log(val)
       },
       closeDialog(){
         this.dialogVisible = false;

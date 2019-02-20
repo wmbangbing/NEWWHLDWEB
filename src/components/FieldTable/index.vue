@@ -285,15 +285,19 @@ export default {
     "fieldTableParam"
   ],
   watch:{
-     "fieldTableParam.visible":function(curVal,oldVal){
-        fadeIn(fieldTb);
-        // getFormData("XBInfo").then(response=>{
-        //   this.tableData = response.data
-        //   this.loading = false;
-        // })
-        this.tableData = this.$store.getters.enXBInfo;
-        this.loading = false;
-     }
+    "fieldTableParam.visible":function(curVal,oldVal){
+      fadeIn(fieldTb);
+      // getFormData("XBInfo").then(response=>{
+      //   this.tableData = response.data
+      //   this.loading = false;
+      // })
+      // this.tableData = [];
+      
+    },
+    gettableData(val){
+      this.tableData = val;
+      this.loading = false;
+    }
   },
   // mounted(){
   //   getFormData("XBInfo").then(response=>{
@@ -304,14 +308,24 @@ export default {
     datas:function(){
       const search = this.search;
       if(search){
+        var searchList = this.splitByComma(search);
         return this.tableData.filter(dataNews =>{
-          return Object.keys(dataNews).some(key =>{
-              return String(dataNews[key]).toLowerCase().indexOf(search) > -1        
+          // return Object.keys(dataNews).some(key =>{
+          //   // return String(dataNews[key]).toLowerCase().indexOf(search) > -1   
+          //   return this.determineAll(searchList,dataNews,key);    
+          // })
+          return searchList.every(a => {
+            return Object.keys(dataNews).some(key =>{
+              return String(dataNews[key]).toLowerCase().indexOf(a) > -1   
+            })
           })
         })
       }
       // console.log(this.tableData);
-      return this.tableData
+      return this.tableData || []
+    },
+    gettableData:function(){
+      return this.$store.getters.enXBInfo;
     }
   },
   methods:{
@@ -334,6 +348,16 @@ export default {
     },
     rowClick(row, event, column){    
       this.$emit("returnXBH",row.XBH)
+    },
+    splitByComma(str){
+      var temp = str.split(/[\n\s+,，]/g);
+      for (var i = 0; i < temp.length; i++) {
+        if (temp[i] == "") {
+          temp.splice(i, 1);
+          i--;
+        }
+      }
+      return temp;
     }
   }
 }

@@ -92,7 +92,8 @@ export default  {
       view:undefined,
       renderer:null,
       esriOptions:{
-        url: 'http://223.255.43.21:82/arcgis_js_api4.8/library/4.8/dojo/dojo.js',
+        // url: 'http://223.255.43.21:82/arcgis_js_api4.8/library/4.8/dojo/dojo.js',
+        url:this.SERVSER_CONFIG.esriUrl + "/dojo/dojo.js"
         // url: 'http://202.114.148.160/arcgis_js_api4.8/library/4.8/dojo/dojo.js',
         // url:'https://js.arcgis.com/4.10/'
       }

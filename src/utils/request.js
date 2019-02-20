@@ -2,6 +2,9 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import configJson from "../../public/config.json"
+
+// JSON.parse(configJson);
 
 // create an axios instance
 const service = axios.create({
@@ -9,8 +12,9 @@ const service = axios.create({
   // baseURL: "http://223.255.43.21:82/WHLDWebApi2/api/", // api 的 base_url
   // baseURL: "http://202.114.148.160/WHLDWebApi/api/", // api 的 base_url
   // baseURL:"http://202.114.148.160/whldwebapi2/api",
-  baseURL:"http://localhost:42501/api",
+  // baseURL:"http://localhost:42501/api",
   // baseURL: this.baseURL,
+  baseURL:configJson.baseUrl,
   timeout: 200000 // request timeout
 })
 

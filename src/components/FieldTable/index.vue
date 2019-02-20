@@ -13,8 +13,8 @@
     </header>
     <div>
       <div style="width:98%;margin:0 auto;margin-bottom:10px">
-        搜索： <el-input size=small v-model="search" style="width:200px" />
-        <el-button @click="openDownloadDialog" type="primary" size=small style="float:right">导出Excel</el-button>
+        搜索： <el-input size=small v-model="search" style="width:200px" />     
+        <el-button @click="openDownloadDialog" type="primary" size=small style="float:right">按时间导出Excel</el-button>
       </div>
       <!-- :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" -->
       <el-table    
@@ -135,15 +135,7 @@
           label="造林时间">
         </el-table-column>
         <el-table-column
-          prop="ZLSJ"
-          label="造林时间">
-        </el-table-column>
-        <el-table-column
-          prop="ZLSJ"
-          label="造林时间">
-        </el-table-column>
-        <el-table-column
-          prop="SZJG"
+          prop="SZZC"
           label="树种组成">
         </el-table-column>
         <el-table-column
@@ -296,6 +288,7 @@ export default {
     },
     gettableData(val){
       this.tableData = val;
+      
       this.loading = false;
     }
   },
@@ -337,7 +330,7 @@ export default {
     },
     close(){
       fieldTb.style.display = "none";
-      this.loading = true;
+      // this.loading = true;
     },
     handleUpdate(row){
       this.$store.dispatch("SetTableRow",row);  

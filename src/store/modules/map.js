@@ -26,6 +26,18 @@ const map = {
       case "黄陂区":
         definitionExpression=`DWMC = '黄陂区'`;
         break;
+      case "东西湖区":
+        definitionExpression=`DWMC = '东西湖区'`;
+        break;
+      case "东湖高新区":
+        definitionExpression=`DWMC = '东湖高新区'`;
+        break;
+      case "蔡甸区":
+        definitionExpression=`DWMC = '蔡甸区'`;
+        break;
+      case "汉西苗圃":
+        definitionExpression=`DWMC = '汉西苗圃'`;
+        break;
       default:
         definitionExpression=``;
         break;
